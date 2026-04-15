@@ -6,23 +6,43 @@
 <title>醫藥箱管理 App</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --blue:#72A9FF;--blue-dark:#3a7de8;--blue-pale:#e8f1ff;
-  --yellow:#FFE958;--yellow-dark:#c4a800;
-  --gray:#D7E0E6;--gray-dark:#8fa3ad;
-  --bg:#f0f4f8;--white:#fff;--text:#1a2a3a;--text2:#5a7080
-}
+:root{--blue:#72A9FF;--blue-dark:#3a7de8;--blue-pale:#e8f1ff;--yellow:#FFE958;--gray:#D7E0E6;--bg:#f0f4f8;--white:#fff;--text:#1a2a3a;--text2:#5a7080}
 body{background:#e8eef5;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .phone{background:var(--bg);border-radius:32px;border:2px solid #c8d8e8;width:min(390px,100vw);overflow:hidden;min-height:100vh}
+.login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px}
+.login-logo{width:72px;height:72px;border-radius:22px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:20px}
+.login-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:32px}
+.school-cards{display:flex;flex-direction:column;gap:12px;width:100%}
+.school-card{background:var(--white);border-radius:20px;padding:18px 20px;cursor:pointer;border:2px solid transparent;display:flex;align-items:center;gap:14px}
+.school-card.selected{border-color:var(--blue)}
+.school-card:active{opacity:.8}
+.school-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.school-icon.main{background:#e8f1ff}
+.school-icon.branch{background:#FFFBE0}
+.school-name{font-size:15px;font-weight:700;color:var(--text)}
+.school-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.pw-wrap{width:100%;margin-top:18px}
+.pw-input{width:100%;padding:13px 16px;border-radius:14px;border:1.5px solid var(--gray);font-size:16px;background:var(--white);color:var(--text);outline:none;text-align:center;letter-spacing:6px}
+.pw-input:focus{border-color:var(--blue)}
+.pw-hint{font-size:11px;color:var(--text2);text-align:center;margin-top:8px}
+.login-btn{width:100%;margin-top:16px;padding:15px;border-radius:14px;background:var(--blue);color:#fff;border:none;font-size:16px;font-weight:700;cursor:pointer}
+.login-btn:active{background:var(--blue-dark)}
+.login-err{color:#c0302a;font-size:12px;text-align:center;margin-top:10px;min-height:18px}
 .topbar{background:var(--blue);padding:18px 20px 14px;color:#fff}
 .topbar-row{display:flex;align-items:center;justify-content:space-between}
-.app-title{font-size:20px;font-weight:600;letter-spacing:.5px}
+.app-title{font-size:19px;font-weight:700}
 .top-sub{font-size:12px;opacity:.85;margin-top:2px}
-.setting-btn{background:rgba(255,255,255,.2);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:17px}
-.setting-btn:active{background:rgba(255,255,255,.35)}
+.top-btns{display:flex;gap:8px}
+.icon-btn{background:rgba(255,255,255,.2);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:16px}
+.icon-btn:active{background:rgba(255,255,255,.4)}
+.cat-tabs{display:flex;gap:6px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:rgba(255,255,255,.25);color:#fff}
+.cat-tab.active{background:#fff;color:#3a7de8}
 .sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px}
 .sum-card{background:var(--white);border-radius:14px;padding:10px 6px;text-align:center}
-.sum-num{font-size:20px;font-weight:600;color:var(--text)}
+.sum-num{font-size:20px;font-weight:700;color:var(--text)}
 .sum-num.warn{color:#c07000}
 .sum-num.danger{color:#c0302a}
 .sum-label{font-size:10px;color:var(--text2);margin-top:2px}
@@ -30,13 +50,13 @@ body{background:#e8eef5;display:flex;justify-content:center;align-items:flex-sta
 .alert{border-radius:12px;padding:9px 12px;font-size:12px;margin-bottom:6px;display:flex;gap:8px;align-items:flex-start}
 .alert-d{background:#FCEBEB;color:#8a2020}
 .alert-w{background:#FFF8D6;color:#7a5500}
-.alert b{font-weight:600}
+.alert b{font-weight:700}
 .tab-row{display:flex;padding:0 16px;gap:6px;margin-bottom:10px;overflow-x:auto}
 .tab-row::-webkit-scrollbar{display:none}
 .tab{padding:6px 14px;border-radius:999px;font-size:12px;border:none;background:var(--white);color:var(--text2);cursor:pointer;white-space:nowrap;font-weight:500}
 .tab.active{background:var(--blue);color:#fff}
 .list{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px}
-.med-card{background:var(--white);border-radius:16px;padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:opacity .15s}
+.med-card{background:var(--white);border-radius:16px;padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer}
 .med-card:active{opacity:.75}
 .med-icon{width:42px;height:42px;border-radius:12px;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .med-icon.yellow{background:#FFFBE0}
@@ -52,16 +72,14 @@ body{background:#e8eef5;display:flex;justify-content:center;align-items:flex-sta
 .b-need{background:#FFE958;color:#6a5000}
 .b-enough{background:#e3f5d8;color:#2d6b0a}
 .qty-badge{font-size:12px;color:var(--text2);font-weight:600}
-.fab{display:flex;justify-content:center;padding:10px 0 20px}
-.fab-btn{background:var(--blue);color:#fff;border:none;border-radius:999px;padding:13px 32px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:background .15s}
-.fab-btn:active{background:var(--blue-dark)}
 .no-data{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
-
-/* Modal as bottom sheet */
+.fab{display:flex;justify-content:center;padding:10px 0 20px}
+.fab-btn{background:var(--blue);color:#fff;border:none;border-radius:999px;padding:13px 32px;font-size:15px;font-weight:700;cursor:pointer}
+.fab-btn:active{background:var(--blue-dark)}
 .modal-overlay{background:rgba(10,30,50,.38);min-height:500px;display:flex;align-items:flex-end}
 .modal{background:var(--white);border-radius:24px 24px 0 0;padding:20px 20px 28px;width:100%}
 .modal-handle{width:36px;height:4px;background:var(--gray);border-radius:999px;margin:0 auto 16px}
-.modal-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:16px;text-align:center}
+.modal-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;text-align:center}
 .form-row{margin-bottom:12px}
 .form-row label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600}
 .form-row input,.form-row select{width:100%;padding:9px 8px;border-radius:10px;border:1.5px solid var(--gray);font-size:12px;background:var(--bg);color:var(--text);outline:none}
@@ -69,32 +87,53 @@ body{background:#e8eef5;display:flex;justify-content:center;align-items:flex-sta
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .modal-actions{display:flex;gap:8px;margin-top:16px}
 .btn-cancel{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--gray);background:var(--bg);color:var(--text2);font-size:14px;cursor:pointer}
-.btn-save{flex:2;padding:11px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.btn-save{flex:2;padding:11px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
 .btn-save:active{background:var(--blue-dark)}
-.del-btn{padding:11px 14px;border-radius:12px;border:none;background:#FCEBEB;color:#8a2020;font-size:14px;cursor:pointer;font-weight:500}
-
-/* Settings */
+.del-btn{padding:11px 14px;border-radius:12px;border:none;background:#FCEBEB;color:#8a2020;font-size:14px;cursor:pointer}
 .settings-wrap{padding:16px}
-.settings-section-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px}
+.settings-section-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px}
 .settings-list{display:flex;flex-direction:column;gap:8px}
 .settings-item{background:var(--white);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
 .settings-item-name{font-size:13px;font-weight:600;color:var(--text)}
-.settings-item-qty-label{font-size:11px;color:var(--text2);margin-top:2px}
+.settings-item-sub{font-size:11px;color:var(--text2);margin-top:2px}
 .qty-controls{display:flex;align-items:center;gap:6px}
-.qty-btn{width:30px;height:30px;border-radius:50%;border:none;background:var(--blue-pale);color:var(--blue-dark);font-size:18px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:background .1s}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:none;background:var(--blue-pale);color:var(--blue-dark);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .qty-btn:active{background:var(--blue);color:#fff}
-.qty-val{font-size:15px;font-weight:600;color:var(--text);min-width:22px;text-align:center}
+.qty-val{font-size:15px;font-weight:700;color:var(--text);min-width:22px;text-align:center}
 .del-icon-btn{width:30px;height:30px;border-radius:50%;border:none;background:#FCEBEB;color:#8a2020;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px}
-.settings-add-btn{width:100%;margin-top:14px;padding:13px;border-radius:14px;background:var(--blue);color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.settings-add-btn{width:100%;margin-top:14px;padding:13px;border-radius:14px;background:var(--blue);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer}
+.switch-btn{width:100%;margin-top:10px;padding:13px;border-radius:14px;background:var(--bg);color:var(--text2);border:1.5px solid var(--gray);font-size:14px;font-weight:600;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="phone" id="app"></div>
-
 <script>
+const SCHOOLS={
+  main:{name:'本校',key:'main',pw:'1234',icon:'🏫',iconClass:'main',desc:'天母校區'},
+  branch:{name:'三校',key:'branch',pw:'5678',icon:'🏢',iconClass:'branch',desc:'天母校區'}
+};
+const DEFAULT_ITEMS=[
+  {id:1,name:'OK繃（多尺寸）',buy:'2024-06-01',exp:'2027-06-01',dur:36,qty:20,need:'auto',cat:'consumable'},
+  {id:2,name:'棉花棒 / 棉球',buy:'2025-01-01',exp:'2028-01-01',dur:36,qty:1,need:'auto',cat:'consumable'},
+  {id:3,name:'無菌紗布（小/中）',buy:'2024-03-15',exp:'2027-03-15',dur:36,qty:5,need:'auto',cat:'consumable'},
+  {id:4,name:'透氣膠帶',buy:'2024-08-01',exp:'2027-08-01',dur:36,qty:2,need:'auto',cat:'consumable'},
+  {id:5,name:'圓頭安全剪刀',buy:'2022-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'consumable'},
+  {id:6,name:'一次性手套',buy:'2024-10-01',exp:'2027-10-01',dur:36,qty:10,need:'auto',cat:'consumable'},
+  {id:7,name:'口罩',buy:'2024-05-01',exp:'2027-05-01',dur:36,qty:15,need:'auto',cat:'consumable'},
+  {id:8,name:'冰敷袋',buy:'2023-01-01',exp:'2026-01-01',dur:36,qty:3,need:'auto',cat:'consumable'},
+  {id:9,name:'白藥水',buy:'2024-01-10',exp:'2025-07-10',dur:18,qty:1,need:'auto',cat:'medicine'},
+  {id:10,name:'碘酒棉片 / 優碘',buy:'2023-12-01',exp:'2025-06-01',dur:24,qty:2,need:'auto',cat:'medicine'},
+  {id:11,name:'生理食鹽水',buy:'2024-09-01',exp:'2026-09-01',dur:24,qty:3,need:'auto',cat:'medicine'},
+  {id:12,name:'燙傷藥膏（灼膚星）',buy:'2023-06-01',exp:'2025-06-01',dur:36,qty:1,need:'auto',cat:'medicine'},
+  {id:13,name:'喜療淤',buy:'2023-11-01',exp:'2025-11-01',dur:24,qty:1,need:'auto',cat:'medicine'},
+  {id:14,name:'佳利軟膏',buy:'2025-01-01',exp:'2027-01-01',dur:24,qty:1,need:'auto',cat:'medicine'},
+  {id:15,name:'鑷子',buy:'2020-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
+  {id:16,name:'體溫計',buy:'2021-03-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
+];
+
 const today=new Date();today.setHours(0,0,0,0);
 function daysLeft(d){if(!d)return null;const t=new Date(d);t.setHours(0,0,0,0);return Math.round((t-today)/864e5)}
-function fmt(d){if(!d)return '—';return new Date(d).toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'})}
+function fmt(d){if(!d)return'—';return new Date(d).toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'})}
 function emojiFor(n){
   if(/OK繃/.test(n))return'🩹';if(/白藥/.test(n))return'🧴';if(/棉花/.test(n))return'☁️';
   if(/紗布/.test(n))return'🩻';if(/碘|優碘/.test(n))return'💧';if(/剪/.test(n))return'✂️';
@@ -104,71 +143,24 @@ function emojiFor(n){
   if(/冰/.test(n))return'❄️';if(/佳利/.test(n))return'🏥';return'💊';
 }
 function iconClass(n){if(/燙|灼/.test(n))return'yellow';if(/鑷|剪/.test(n))return'gray';return'';}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function storageKey(k){return'medicine_v2_'+k;}
+function loadItems(k){try{const d=localStorage.getItem(storageKey(k));if(d)return JSON.parse(d);}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_ITEMS));}
+function saveItems(){try{localStorage.setItem(storageKey(currentSchool.key),JSON.stringify(items));}catch(e){}}
 
-const STORAGE_KEY='medicine_app_v1';
-function loadItems(){
-  try{const d=localStorage.getItem(STORAGE_KEY);if(d)return JSON.parse(d);}catch(e){}
-  return[
-    {id:1,name:'OK繃（多尺寸）',buy:'2024-06-01',exp:'2027-06-01',dur:36,qty:20,need:'auto',cat:'consumable'},
-    {id:3,name:'棉花棒 / 棉球',buy:'2025-01-01',exp:'2028-01-01',dur:36,qty:1,need:'auto',cat:'consumable'},
-    {id:4,name:'無菌紗布（小/中）',buy:'2024-03-15',exp:'2027-03-15',dur:36,qty:5,need:'auto',cat:'consumable'},
-    {id:7,name:'透氣膠帶',buy:'2024-08-01',exp:'2027-08-01',dur:36,qty:2,need:'auto',cat:'consumable'},
-    {id:6,name:'圓頭安全剪刀',buy:'2022-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'consumable'},
-    {id:13,name:'一次性手套',buy:'2024-10-01',exp:'2027-10-01',dur:36,qty:10,need:'auto',cat:'consumable'},
-    {id:14,name:'口罩',buy:'2024-05-01',exp:'2027-05-01',dur:36,qty:15,need:'auto',cat:'consumable'},
-    {id:16,name:'冰敷袋',buy:'2023-01-01',exp:'2026-01-01',dur:36,qty:3,need:'auto',cat:'consumable'},
-    {id:2,name:'白藥水',buy:'2024-01-10',exp:'2025-07-10',dur:18,qty:1,need:'auto',cat:'medicine'},
-    {id:5,name:'碘酒棉片 / 優碘',buy:'2023-12-01',exp:'2025-06-01',dur:24,qty:2,need:'auto',cat:'medicine'},
-    {id:10,name:'生理食鹽水',buy:'2024-09-01',exp:'2026-09-01',dur:24,qty:3,need:'auto',cat:'medicine'},
-    {id:11,name:'燙傷藥膏（灼膚星）',buy:'2023-06-01',exp:'2025-06-01',dur:36,qty:1,need:'auto',cat:'medicine'},
-    {id:12,name:'喜療淤',buy:'2023-11-01',exp:'2025-11-01',dur:24,qty:1,need:'auto',cat:'medicine'},
-    {id:17,name:'佳利軟膏',buy:'2025-01-01',exp:'2027-01-01',dur:24,qty:1,need:'auto',cat:'medicine'},
-    {id:9,name:'鑷子',buy:'2020-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
-    {id:15,name:'體溫計',buy:'2021-03-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
-  ];
-}
-function saveItems(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(items));}catch(e){}}
-
-let items=loadItems();
-let nextId=Math.max(...items.map(i=>i.id))+1;
-let filter='all';
-let view='list';
-let page='consumable';
-let editItem=null;
+let currentSchool=null,items=[],nextId=20,filter='all',view='login',page='consumable',editItem=null,selectedKey=null;
 
 function needBuy(it){
-  if(it.need==='yes')return true;
-  if(it.need==='no')return false;
+  if(it.need==='yes')return true;if(it.need==='no')return false;
   if(it.qty<=0)return true;
   if(it.exp){const d=daysLeft(it.exp);if(d!==null&&d<60)return true;}
   return false;
 }
 function statusOf(it){
-  if(it.exp){const d=daysLeft(it.exp);
-    if(d===null)return{t:'正常',c:'b-ok'};
-    if(d<0)return{t:'已過期',c:'b-danger'};
-    if(d<60)return{t:d+'天到期',c:'b-warn'};
-  }
-  return{t:'長效',c:'b-ok'};
+  if(it.exp){const d=daysLeft(it.exp);if(d<0)return{t:'已過期',c:'b-danger'};if(d<60)return{t:d+'天到期',c:'b-warn'};}
+  return{t:it.exp?'正常':'長效',c:'b-ok'};
 }
-function stats(){
-  let exp=0,expiring=0,need=0;
-  items.forEach(it=>{
-    if(it.exp){const d=daysLeft(it.exp);if(d!==null&&d<0)exp++;else if(d!==null&&d<60)expiring++;}
-    if(needBuy(it))need++;
-  });
-  return{total:items.length,exp,expiring,need};
-}
-function filtered(){
-  return items.filter(it=>{
-    if(filter==='need')return needBuy(it);
-    if(filter==='expired')return it.exp&&daysLeft(it.exp)<0;
-    if(filter==='expiring'){const d=it.exp?daysLeft(it.exp):null;return d!==null&&d>=0&&d<60;}
-    return true;
-  });
-}
-
-function setPage(p){page=p;filter='all';render();}
+function pageItems(){return items.filter(it=>it.cat===page);}
 function filteredByPage(){
   return items.filter(it=>{
     if(it.cat!==page)return false;
@@ -178,29 +170,68 @@ function filteredByPage(){
     return true;
   });
 }
-function pageItems(){return items.filter(it=>it.cat===page);}
+
+function renderLogin(){
+  return`<div class="login-screen">
+    <div class="login-logo">🏥</div>
+    <div class="login-title">醫藥箱管理</div>
+    <div class="login-sub">請選擇校區</div>
+    <div class="school-cards">
+      ${Object.values(SCHOOLS).map(s=>`
+        <div class="school-card ${selectedKey===s.key?'selected':''}" onclick="selectSchool('${s.key}')">
+          <div class="school-icon ${s.iconClass}">${s.icon}</div>
+          <div><div class="school-name">${s.name}</div><div class="school-desc">${s.desc}</div></div>
+        </div>`).join('')}
+    </div>
+    <div class="pw-wrap">
+      <input class="pw-input" id="pw-input" type="password" placeholder="••••" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <div class="pw-hint">輸入該校密碼後按進入</div>
+    </div>
+    <button class="login-btn" onclick="doLogin()">進入</button>
+    <div class="login-err" id="login-err"></div>
+  </div>`;
+}
+
+function selectSchool(key){
+  selectedKey=key;render();
+  setTimeout(()=>{const el=document.getElementById('pw-input');if(el)el.focus();},50);
+}
+
+function doLogin(){
+  if(!selectedKey){document.getElementById('login-err').textContent='請先選擇校區';return;}
+  const pw=document.getElementById('pw-input').value;
+  const school=SCHOOLS[selectedKey];
+  if(pw!==school.pw){document.getElementById('login-err').textContent='密碼錯誤，請再試一次';return;}
+  currentSchool=school;
+  items=loadItems(school.key);
+  nextId=items.length?Math.max(...items.map(i=>i.id))+1:20;
+  view='list';page='consumable';filter='all';render();
+}
+
+function doLogout(){currentSchool=null;selectedKey=null;view='login';render();}
 
 function renderList(){
-  const s=stats();
   const pi=pageItems();
   const pExp=pi.filter(it=>it.exp&&daysLeft(it.exp)<0).map(i=>i.name);
   const pExpiring=pi.filter(it=>{const d=it.exp?daysLeft(it.exp):null;return d!==null&&d>=0&&d<60;}).map(i=>i.name);
   const fl=filteredByPage();
-  const pageLabels={consumable:'消耗性用品',medicine:'藥品',tool:'非消耗性用具'};
   return`
   <div class="topbar">
     <div class="topbar-row">
-      <div><div class="app-title">醫藥箱管理</div><div class="top-sub">家庭常備藥品追蹤</div></div>
-      <button class="setting-btn" onclick="switchView('settings')">⚙</button>
+      <div><div class="app-title">${currentSchool.icon} ${currentSchool.name}</div><div class="top-sub">醫藥箱管理系統</div></div>
+      <div class="top-btns">
+        <button class="icon-btn" onclick="switchView('settings')">⚙</button>
+        <button class="icon-btn" onclick="doLogout()">⏏</button>
+      </div>
     </div>
-    <div style="display:flex;gap:6px;margin-top:12px;overflow-x:auto;padding-bottom:2px">
-      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='consumable'?'#fff':'rgba(255,255,255,.25)'};color:${page==='consumable'?'#3a7de8':'#fff'}" onclick="setPage('consumable')">消耗性用品</button>
-      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='medicine'?'#fff':'rgba(255,255,255,.25)'};color:${page==='medicine'?'#3a7de8':'#fff'}" onclick="setPage('medicine')">藥品</button>
-      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='tool'?'#fff':'rgba(255,255,255,.25)'};color:${page==='tool'?'#3a7de8':'#fff'}" onclick="setPage('tool')">非消耗性用具</button>
+    <div class="cat-tabs">
+      <button class="cat-tab ${page==='consumable'?'active':''}" onclick="setPage('consumable')">消耗性用品</button>
+      <button class="cat-tab ${page==='medicine'?'active':''}" onclick="setPage('medicine')">藥品</button>
+      <button class="cat-tab ${page==='tool'?'active':''}" onclick="setPage('tool')">非消耗性用具</button>
     </div>
   </div>
   <div class="sum-row">
-    <div class="sum-card"><div class="sum-num">${pi.length}</div><div class="sum-label">本類藥品</div></div>
+    <div class="sum-card"><div class="sum-num">${pi.length}</div><div class="sum-label">本類數量</div></div>
     <div class="sum-card"><div class="sum-num danger">${pExp.length}</div><div class="sum-label">已過期</div></div>
     <div class="sum-card"><div class="sum-num warn">${pExpiring.length}</div><div class="sum-label">快到期</div></div>
     <div class="sum-card"><div class="sum-num" style="color:#c0302a">${pi.filter(it=>needBuy(it)).length}</div><div class="sum-label">需補購</div></div>
@@ -221,7 +252,7 @@ function renderList(){
       return`<div class="med-card" onclick="openEdit(${it.id})">
         <div class="med-icon ${iconClass(it.name)}">${emojiFor(it.name)}</div>
         <div class="med-info">
-          <div class="med-name">${it.name}</div>
+          <div class="med-name">${escHtml(it.name)}</div>
           <div class="med-sub">到期：${it.exp?fmt(it.exp):'長效'} | 購買：${fmt(it.buy)}</div>
         </div>
         <div class="med-right">
@@ -232,27 +263,33 @@ function renderList(){
       </div>`;
     }).join('')}
   </div>
-  <div class="fab"><button class="fab-btn" onclick="openAdd()">+ 新增藥品</button></div>
-  `;
+  <div class="fab"><button class="fab-btn" onclick="openAdd()">+ 新增藥品</button></div>`;
 }
 
 function renderModal(){
   const it=editItem;const isEdit=!!it;
-  return`
-  <div class="modal-overlay" onclick="handleOverlayClick(event)">
+  return`<div class="modal-overlay" onclick="handleOverlayClick(event)">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
       <div class="modal-title">${isEdit?'編輯藥品':'新增藥品'}</div>
       <div class="form-row"><label>藥品名稱</label><input id="f-name" value="${isEdit?escHtml(it.name):''}" placeholder="例：OK繃"/></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-grid">
         <div class="form-row"><label>購買日期</label><input id="f-buy" type="text" placeholder="yyyy/mm/dd" value="${isEdit?(it.buy||'').replace(/-/g,'/'):(new Date().toISOString().slice(0,10).replace(/-/g,'/'))}"/></div>
-        <div class="form-row"><label>有效日期</label><input id="f-exp" type="text" placeholder="yyyy/mm/dd" value="${isEdit?(it.exp||'').replace(/-/g,'/'):''}"/></div>
+        <div class="form-row"><label>有效日期</label><input id="f-exp" type="text" placeholder="yyyy/mm/dd" value="${isEdit?(it.exp||'').replace(/-/g,'/'):''}" /></div>
         <div class="form-row"><label>使用期限（月）</label><input id="f-dur" type="number" min="1" value="${isEdit?(it.dur||''):''}" placeholder="12"/></div>
         <div class="form-row"><label>數量</label><input id="f-qty" type="number" min="0" value="${isEdit?it.qty:1}"/></div>
       </div>
       <div class="form-grid">
-        <div class="form-row"><label>類別</label><select id="f-cat"><option value="consumable" ${(!isEdit||it.cat==='consumable')?'selected':''}>消耗性用品</option><option value="medicine" ${isEdit&&it.cat==='medicine'?'selected':''}>藥品</option><option value="tool" ${isEdit&&it.cat==='tool'?'selected':''}>非消耗性用具</option></select></div>
-        <div class="form-row"><label>是否需購買</label><select id="f-need"><option value="auto" ${(!isEdit||it.need==='auto')?'selected':''}>自動判斷</option><option value="yes" ${isEdit&&it.need==='yes'?'selected':''}>是</option><option value="no" ${isEdit&&it.need==='no'?'selected':''}>否</option></select></div>
+        <div class="form-row"><label>類別</label><select id="f-cat">
+          <option value="consumable" ${(!isEdit||it.cat==='consumable')?'selected':''}>消耗性用品</option>
+          <option value="medicine" ${isEdit&&it.cat==='medicine'?'selected':''}>藥品</option>
+          <option value="tool" ${isEdit&&it.cat==='tool'?'selected':''}>非消耗性用具</option>
+        </select></div>
+        <div class="form-row"><label>是否需購買</label><select id="f-need">
+          <option value="auto" ${(!isEdit||it.need==='auto')?'selected':''}>自動判斷</option>
+          <option value="yes" ${isEdit&&it.need==='yes'?'selected':''}>是</option>
+          <option value="no" ${isEdit&&it.need==='no'?'selected':''}>否</option>
+        </select></div>
       </div>
       <div class="modal-actions">
         ${isEdit?`<button class="del-btn" onclick="delItem(${it.id})">刪除</button>`:''}
@@ -267,8 +304,8 @@ function renderSettings(){
   return`
   <div class="topbar">
     <div class="topbar-row">
-      <button class="setting-btn" onclick="switchView('list')">←</button>
-      <div style="color:#fff;font-size:16px;font-weight:600">系統設定</div>
+      <button class="icon-btn" onclick="switchView('list')">←</button>
+      <div style="color:#fff;font-size:16px;font-weight:700">${currentSchool.icon} ${currentSchool.name} 設定</div>
       <div style="width:34px"></div>
     </div>
   </div>
@@ -277,62 +314,48 @@ function renderSettings(){
     <div class="settings-list">
       ${items.map(it=>`
         <div class="settings-item">
-          <div>
-            <div class="settings-item-name">${emojiFor(it.name)} ${escHtml(it.name)}</div>
-            <div class="settings-item-qty-label">到期：${it.exp?fmt(it.exp):'長效'}</div>
-          </div>
+          <div><div class="settings-item-name">${emojiFor(it.name)} ${escHtml(it.name)}</div>
+          <div class="settings-item-sub">到期：${it.exp?fmt(it.exp):'長效'}</div></div>
           <div class="qty-controls">
             <button class="qty-btn" onclick="changeQty(${it.id},-1)">−</button>
             <span class="qty-val" id="qty-${it.id}">${it.qty}</span>
             <button class="qty-btn" onclick="changeQty(${it.id},1)">+</button>
             <button class="del-icon-btn" onclick="delItem(${it.id})">✕</button>
           </div>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>
     <button class="settings-add-btn" onclick="switchView('list');openAdd()">+ 新增藥品</button>
+    <button class="switch-btn" onclick="doLogout()">⏏ 切換校區</button>
   </div>`;
 }
 
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
 function render(){
   const app=document.getElementById('app');
+  if(view==='login'){app.innerHTML=renderLogin();return;}
   if(view==='settings'){app.innerHTML=renderSettings();return;}
   if(view==='modal'){app.innerHTML=renderList()+renderModal();return;}
   app.innerHTML=renderList();
 }
-
 function switchView(v){view=v;editItem=null;render();}
+function setPage(p){page=p;filter='all';render();}
 function setFilter(f){filter=f;render();}
 function openAdd(){editItem=null;view='modal';render();}
 function openEdit(id){editItem=items.find(i=>i.id===id);view='modal';render();}
 function handleOverlayClick(e){if(e.target.classList.contains('modal-overlay'))closeModal();}
 function closeModal(){view='list';editItem=null;render();}
-
 function saveItem(id){
   const name=document.getElementById('f-name').value.trim();
   if(!name){alert('請輸入藥品名稱');return;}
-  const obj={
-    name,
-    buy:document.getElementById('f-buy').value.replace(/\//g,'-'),
-    exp:document.getElementById('f-exp').value.replace(/\//g,'-'),
-    dur:parseInt(document.getElementById('f-dur').value)||null,
-    qty:parseInt(document.getElementById('f-qty').value)||0,
-    need:document.getElementById('f-need').value,
-    cat:document.getElementById('f-cat').value
-  };
+  const obj={name,buy:document.getElementById('f-buy').value.replace(/\//g,'-'),exp:document.getElementById('f-exp').value.replace(/\//g,'-'),dur:parseInt(document.getElementById('f-dur').value)||null,qty:parseInt(document.getElementById('f-qty').value)||0,need:document.getElementById('f-need').value,cat:document.getElementById('f-cat').value};
   if(id&&id!=='null'){const idx=items.findIndex(i=>i.id===parseInt(id));items[idx]={...items[idx],...obj};}
-  else{if(!obj.cat)obj.cat=page;items.push({id:nextId++,...obj});}
+  else{obj.id=nextId++;items.push(obj);}
   saveItems();view='list';editItem=null;render();
 }
-
 function delItem(id){
   if(!confirm('確定要刪除此藥品？'))return;
   items=items.filter(i=>i.id!==id);
   saveItems();view='list';editItem=null;render();
 }
-
 function changeQty(id,delta){
   const it=items.find(i=>i.id===id);
   if(it){it.qty=Math.max(0,it.qty+delta);}
@@ -340,7 +363,6 @@ function changeQty(id,delta){
   const el=document.getElementById('qty-'+id);
   if(el)el.textContent=it.qty;
 }
-
 render();
 </script>
 </body>
