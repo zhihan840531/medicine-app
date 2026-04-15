@@ -66,7 +66,7 @@ body{background:#e8eef5;display:flex;justify-content:center;align-items:flex-sta
 .form-row label{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:600}
 .form-row input,.form-row select{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--gray);font-size:13px;background:var(--bg);color:var(--text);outline:none}
 .form-row input:focus,.form-row select:focus{border-color:var(--blue)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid{display:grid;grid-template-columns:1fr;gap:0}
 .modal-actions{display:flex;gap:8px;margin-top:16px}
 .btn-cancel{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--gray);background:var(--bg);color:var(--text2);font-size:14px;cursor:pointer}
 .btn-save{flex:2;padding:11px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
@@ -225,9 +225,9 @@ function renderModal(){
       <div class="modal-handle"></div>
       <div class="modal-title">${isEdit?'編輯藥品':'新增藥品'}</div>
       <div class="form-row"><label>藥品名稱</label><input id="f-name" value="${isEdit?escHtml(it.name):''}" placeholder="例：OK繃"/></div>
-      <div class="form-grid">
-        <div class="form-row"><label>購買日期</label><input id="f-buy" type="date" value="${isEdit?(it.buy||''):(new Date().toISOString().slice(0,10))}"/></div>
-        <div class="form-row"><label>有效日期</label><input id="f-exp" type="date" value="${isEdit?(it.exp||''):''}"/></div>
+      <div class="form-row"><label>購買日期</label><input id="f-buy" type="date" value="${isEdit?(it.buy||''):(new Date().toISOString().slice(0,10))}"/></div>
+      <div class="form-row"><label>有效日期</label><input id="f-exp" type="date" value="${isEdit?(it.exp||''):''}"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="form-row"><label>使用期限（月）</label><input id="f-dur" type="number" min="1" value="${isEdit?(it.dur||''):''}" placeholder="12"/></div>
         <div class="form-row"><label>數量</label><input id="f-qty" type="number" min="0" value="${isEdit?it.qty:1}"/></div>
       </div>
