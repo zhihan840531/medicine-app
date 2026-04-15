@@ -109,23 +109,22 @@ const STORAGE_KEY='medicine_app_v1';
 function loadItems(){
   try{const d=localStorage.getItem(STORAGE_KEY);if(d)return JSON.parse(d);}catch(e){}
   return[
-    {id:1,name:'OK繃（多尺寸）',buy:'2024-06-01',exp:'2027-06-01',dur:36,qty:20,need:'auto'},
-    {id:2,name:'白藥水',buy:'2024-01-10',exp:'2025-07-10',dur:18,qty:1,need:'auto'},
-    {id:3,name:'棉花棒 / 棉球',buy:'2025-01-01',exp:'2028-01-01',dur:36,qty:1,need:'auto'},
-    {id:4,name:'無菌紗布（小/中）',buy:'2024-03-15',exp:'2027-03-15',dur:36,qty:5,need:'auto'},
-    {id:5,name:'碘酒棉片 / 優碘',buy:'2023-12-01',exp:'2025-06-01',dur:24,qty:2,need:'auto'},
-    {id:6,name:'圓頭安全剪刀',buy:'2022-01-01',exp:'',dur:null,qty:1,need:'auto'},
-    {id:7,name:'透氣膠帶',buy:'2024-08-01',exp:'2027-08-01',dur:36,qty:2,need:'auto'},
-    {id:8,name:'面速力達母',buy:'2024-02-01',exp:'2026-02-01',dur:24,qty:1,need:'auto'},
-    {id:9,name:'鑷子',buy:'2020-01-01',exp:'',dur:null,qty:1,need:'auto'},
-    {id:10,name:'生理食鹽水',buy:'2024-09-01',exp:'2026-09-01',dur:24,qty:3,need:'auto'},
-    {id:11,name:'燙傷藥膏（灼膚星）',buy:'2023-06-01',exp:'2025-06-01',dur:36,qty:1,need:'auto'},
-    {id:12,name:'喜療淤',buy:'2023-11-01',exp:'2025-11-01',dur:24,qty:1,need:'auto'},
-    {id:13,name:'一次性手套',buy:'2024-10-01',exp:'2027-10-01',dur:36,qty:10,need:'auto'},
-    {id:14,name:'口罩',buy:'2024-05-01',exp:'2027-05-01',dur:36,qty:15,need:'auto'},
-    {id:15,name:'體溫計',buy:'2021-03-01',exp:'',dur:null,qty:1,need:'auto'},
-    {id:16,name:'冰敷袋',buy:'2023-01-01',exp:'2026-01-01',dur:36,qty:3,need:'auto'},
-    {id:17,name:'佳利軟膏',buy:'2025-01-01',exp:'2027-01-01',dur:24,qty:1,need:'auto'},
+    {id:1,name:'OK繃（多尺寸）',buy:'2024-06-01',exp:'2027-06-01',dur:36,qty:20,need:'auto',cat:'consumable'},
+    {id:3,name:'棉花棒 / 棉球',buy:'2025-01-01',exp:'2028-01-01',dur:36,qty:1,need:'auto',cat:'consumable'},
+    {id:4,name:'無菌紗布（小/中）',buy:'2024-03-15',exp:'2027-03-15',dur:36,qty:5,need:'auto',cat:'consumable'},
+    {id:7,name:'透氣膠帶',buy:'2024-08-01',exp:'2027-08-01',dur:36,qty:2,need:'auto',cat:'consumable'},
+    {id:6,name:'圓頭安全剪刀',buy:'2022-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'consumable'},
+    {id:13,name:'一次性手套',buy:'2024-10-01',exp:'2027-10-01',dur:36,qty:10,need:'auto',cat:'consumable'},
+    {id:14,name:'口罩',buy:'2024-05-01',exp:'2027-05-01',dur:36,qty:15,need:'auto',cat:'consumable'},
+    {id:16,name:'冰敷袋',buy:'2023-01-01',exp:'2026-01-01',dur:36,qty:3,need:'auto',cat:'consumable'},
+    {id:2,name:'白藥水',buy:'2024-01-10',exp:'2025-07-10',dur:18,qty:1,need:'auto',cat:'medicine'},
+    {id:5,name:'碘酒棉片 / 優碘',buy:'2023-12-01',exp:'2025-06-01',dur:24,qty:2,need:'auto',cat:'medicine'},
+    {id:10,name:'生理食鹽水',buy:'2024-09-01',exp:'2026-09-01',dur:24,qty:3,need:'auto',cat:'medicine'},
+    {id:11,name:'燙傷藥膏（灼膚星）',buy:'2023-06-01',exp:'2025-06-01',dur:36,qty:1,need:'auto',cat:'medicine'},
+    {id:12,name:'喜療淤',buy:'2023-11-01',exp:'2025-11-01',dur:24,qty:1,need:'auto',cat:'medicine'},
+    {id:17,name:'佳利軟膏',buy:'2025-01-01',exp:'2027-01-01',dur:24,qty:1,need:'auto',cat:'medicine'},
+    {id:9,name:'鑷子',buy:'2020-01-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
+    {id:15,name:'體溫計',buy:'2021-03-01',exp:'',dur:null,qty:1,need:'auto',cat:'tool'},
   ];
 }
 function saveItems(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(items));}catch(e){}}
@@ -133,7 +132,8 @@ function saveItems(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(items))
 let items=loadItems();
 let nextId=Math.max(...items.map(i=>i.id))+1;
 let filter='all';
-let view='list'; // list | modal | settings
+let view='list';
+let page='consumable';
 let editItem=null;
 
 function needBuy(it){
@@ -168,27 +168,46 @@ function filtered(){
   });
 }
 
+function setPage(p){page=p;filter='all';render();}
+function filteredByPage(){
+  return items.filter(it=>{
+    if(it.cat!==page)return false;
+    if(filter==='need')return needBuy(it);
+    if(filter==='expired')return it.exp&&daysLeft(it.exp)<0;
+    if(filter==='expiring'){const d=it.exp?daysLeft(it.exp):null;return d!==null&&d>=0&&d<60;}
+    return true;
+  });
+}
+function pageItems(){return items.filter(it=>it.cat===page);}
+
 function renderList(){
   const s=stats();
-  const expired=items.filter(it=>it.exp&&daysLeft(it.exp)<0).map(i=>i.name);
-  const expiring=items.filter(it=>{const d=it.exp?daysLeft(it.exp):null;return d!==null&&d>=0&&d<60;}).map(i=>i.name);
-  const fl=filtered();
+  const pi=pageItems();
+  const pExp=pi.filter(it=>it.exp&&daysLeft(it.exp)<0).map(i=>i.name);
+  const pExpiring=pi.filter(it=>{const d=it.exp?daysLeft(it.exp):null;return d!==null&&d>=0&&d<60;}).map(i=>i.name);
+  const fl=filteredByPage();
+  const pageLabels={consumable:'消耗性用品',medicine:'藥品',tool:'非消耗性用具'};
   return`
   <div class="topbar">
     <div class="topbar-row">
       <div><div class="app-title">醫藥箱管理</div><div class="top-sub">家庭常備藥品追蹤</div></div>
       <button class="setting-btn" onclick="switchView('settings')">⚙</button>
     </div>
+    <div style="display:flex;gap:6px;margin-top:12px;overflow-x:auto;padding-bottom:2px">
+      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='consumable'?'#fff':'rgba(255,255,255,.25)'};color:${page==='consumable'?'#3a7de8':'#fff'}" onclick="setPage('consumable')">消耗性用品</button>
+      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='medicine'?'#fff':'rgba(255,255,255,.25)'};color:${page==='medicine'?'#3a7de8':'#fff'}" onclick="setPage('medicine')">藥品</button>
+      <button style="padding:6px 14px;border-radius:999px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;background:${page==='tool'?'#fff':'rgba(255,255,255,.25)'};color:${page==='tool'?'#3a7de8':'#fff'}" onclick="setPage('tool')">非消耗性用具</button>
+    </div>
   </div>
   <div class="sum-row">
-    <div class="sum-card"><div class="sum-num">${s.total}</div><div class="sum-label">藥品</div></div>
-    <div class="sum-card"><div class="sum-num danger">${s.exp}</div><div class="sum-label">已過期</div></div>
-    <div class="sum-card"><div class="sum-num warn">${s.expiring}</div><div class="sum-label">快到期</div></div>
-    <div class="sum-card"><div class="sum-num" style="color:#c0302a">${s.need}</div><div class="sum-label">需補購</div></div>
+    <div class="sum-card"><div class="sum-num">${pi.length}</div><div class="sum-label">本類藥品</div></div>
+    <div class="sum-card"><div class="sum-num danger">${pExp.length}</div><div class="sum-label">已過期</div></div>
+    <div class="sum-card"><div class="sum-num warn">${pExpiring.length}</div><div class="sum-label">快到期</div></div>
+    <div class="sum-card"><div class="sum-num" style="color:#c0302a">${pi.filter(it=>needBuy(it)).length}</div><div class="sum-label">需補購</div></div>
   </div>
   <div class="alerts-wrap">
-    ${expired.length?`<div class="alert alert-d">⚠ <span><b>已過期：</b>${expired.join('、')}</span></div>`:''}
-    ${expiring.length?`<div class="alert alert-w">! <span><b>60天內到期：</b>${expiring.join('、')}</span></div>`:''}
+    ${pExp.length?`<div class="alert alert-d">⚠ <span><b>已過期：</b>${pExp.join('、')}</span></div>`:''}
+    ${pExpiring.length?`<div class="alert alert-w">! <span><b>60天內到期：</b>${pExpiring.join('、')}</span></div>`:''}
   </div>
   <div class="tab-row">
     <button class="tab ${filter==='all'?'active':''}" onclick="setFilter('all')">全部</button>
@@ -226,17 +245,14 @@ function renderModal(){
       <div class="modal-title">${isEdit?'編輯藥品':'新增藥品'}</div>
       <div class="form-row"><label>藥品名稱</label><input id="f-name" value="${isEdit?escHtml(it.name):''}" placeholder="例：OK繃"/></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="form-row"><label>購買日期</label><input id="f-buy" type="date" value="${isEdit?(it.buy||''):(new Date().toISOString().slice(0,10))}"/></div>
-        <div class="form-row"><label>有效日期</label><input id="f-exp" type="date" value="${isEdit?(it.exp||''):''}"/></div>
+        <div class="form-row"><label>購買日期</label><input id="f-buy" type="text" placeholder="yyyy/mm/dd" value="${isEdit?(it.buy||'').replace(/-/g,'/'):(new Date().toISOString().slice(0,10).replace(/-/g,'/'))}"/></div>
+        <div class="form-row"><label>有效日期</label><input id="f-exp" type="text" placeholder="yyyy/mm/dd" value="${isEdit?(it.exp||'').replace(/-/g,'/'):''}"/></div>
         <div class="form-row"><label>使用期限（月）</label><input id="f-dur" type="number" min="1" value="${isEdit?(it.dur||''):''}" placeholder="12"/></div>
         <div class="form-row"><label>數量</label><input id="f-qty" type="number" min="0" value="${isEdit?it.qty:1}"/></div>
       </div>
-      <div class="form-row"><label>是否需購買</label>
-        <select id="f-need">
-          <option value="auto" ${(!isEdit||it.need==='auto')?'selected':''}>自動判斷</option>
-          <option value="yes" ${isEdit&&it.need==='yes'?'selected':''}>是</option>
-          <option value="no" ${isEdit&&it.need==='no'?'selected':''}>否</option>
-        </select>
+      <div class="form-grid">
+        <div class="form-row"><label>類別</label><select id="f-cat"><option value="consumable" ${(!isEdit||it.cat==='consumable')?'selected':''}>消耗性用品</option><option value="medicine" ${isEdit&&it.cat==='medicine'?'selected':''}>藥品</option><option value="tool" ${isEdit&&it.cat==='tool'?'selected':''}>非消耗性用具</option></select></div>
+        <div class="form-row"><label>是否需購買</label><select id="f-need"><option value="auto" ${(!isEdit||it.need==='auto')?'selected':''}>自動判斷</option><option value="yes" ${isEdit&&it.need==='yes'?'selected':''}>是</option><option value="no" ${isEdit&&it.need==='no'?'selected':''}>否</option></select></div>
       </div>
       <div class="modal-actions">
         ${isEdit?`<button class="del-btn" onclick="delItem(${it.id})">刪除</button>`:''}
@@ -299,14 +315,15 @@ function saveItem(id){
   if(!name){alert('請輸入藥品名稱');return;}
   const obj={
     name,
-    buy:document.getElementById('f-buy').value,
-    exp:document.getElementById('f-exp').value,
+    buy:document.getElementById('f-buy').value.replace(/\//g,'-'),
+    exp:document.getElementById('f-exp').value.replace(/\//g,'-'),
     dur:parseInt(document.getElementById('f-dur').value)||null,
     qty:parseInt(document.getElementById('f-qty').value)||0,
-    need:document.getElementById('f-need').value
+    need:document.getElementById('f-need').value,
+    cat:document.getElementById('f-cat').value
   };
   if(id&&id!=='null'){const idx=items.findIndex(i=>i.id===parseInt(id));items[idx]={...items[idx],...obj};}
-  else{items.push({id:nextId++,...obj});}
+  else{if(!obj.cat)obj.cat=page;items.push({id:nextId++,...obj});}
   saveItems();view='list';editItem=null;render();
 }
 
